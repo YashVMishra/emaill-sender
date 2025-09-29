@@ -1,0 +1,8 @@
+POST http://localhost:8080/api/emails/send
+Content-Type: application/json
+
+{
+  "toAddress": ["mohdzaid12574@gmail.com, mohammad.zaid.ansari@sap.com, azharcr8@gmail.com"],
+  "subject": "Test Email",
+  "body": "Hello from backend"
+  }
