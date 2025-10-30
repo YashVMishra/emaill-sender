@@ -39,7 +39,7 @@ public class EmailController {
     }
 
     // ✅ Send email
-    @PostMapping("/send")
+    @PostMapping
     public String sendEmail(@RequestBody EmailRequest email) {
         return emailService.sendEmail(
             email.getFromAddress(),
@@ -48,30 +48,6 @@ public class EmailController {
             email.getBody(), 
             email.getAttachmentName()
                 
-        );
-    }
-
-    @PostMapping(value = "/send-with-file", consumes = {"multipart/form-data"})
-    public String sendEmailWithFile(
-        @RequestPart("email") EmailRequest email,
-        @RequestPart(value = "file", required = false) MultipartFile file
-    ) throws IOException {
-        String attachmentName = null;
-        if (file != null && !file.isEmpty()) {
-            String fileName = file.getOriginalFilename();
-            if (fileName != null) {
-                Path filePath = Paths.get(fileName);
-                Files.createDirectories(filePath.getParent()); // Ensure directory exists
-                Files.copy(file.getInputStream(), filePath);
-                attachmentName = fileName;
-            }
-        }
-        return emailService.sendEmail(
-            email.getFromAddress(),
-            email.getToAddress(),
-            email.getSubject(),
-            email.getBody(),
-            attachmentName
         );
     }
 
