@@ -1,6 +1,5 @@
 package com.example.email_service.controller;
 
-import com.example.email_service.controller.EmailController.EmailRequest;
 import com.example.email_service.model.EmailEntity;
 import com.example.email_service.service.EmailService;
 
@@ -9,7 +8,6 @@ import lombok.Data;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -39,16 +37,61 @@ public class EmailController {
     }
 
     // ✅ Send email
-    @PostMapping
-    public String sendEmail(@RequestBody EmailRequest email) {
-        return emailService.sendEmail(
-            email.getFromAddress(),
-            email.getToAddress(), 
-            email.getSubject(), 
-            email.getBody(), 
-            email.getAttachmentName()
-                
-        );
+    // @PostMapping
+    // public String sendEmail(@RequestBody EmailRequest email) {
+    //     try{
+    //         String result = emailService.sendEmail(
+    //             email.getFromAddress(),
+    //             email.getToAddress(), 
+    //             email.getSubject(), 
+    //             email.getBody(), 
+    //             email.getAttachmentName()
+                    
+    //         );
+
+    //         return result;
+    //     }catch(Exception e) {
+    //         e.printStackTrace();
+    //         return "Error: Failed to send email. " + e.getMessage();
+    //     }
+    // }
+
+    @PostMapping(consumes = "multipart/form-data")
+    public String sendEmail(
+    @RequestParam("fromAddress") String fromAddress,
+    @RequestParam("toAddress") List<String> toAddress,
+    @RequestParam("subject") String subject,
+    @RequestParam("body") String body,
+    @RequestParam(value = "attachment", required = false) MultipartFile attachment) {
+
+        try {
+            String attachmentPath = null;
+
+            // Save the file if an attachment is provided
+            if (attachment != null && !attachment.isEmpty()) {
+                Path uploadDir = Paths.get("uploads"); // Directory to save files
+                if (!Files.exists(uploadDir)) {
+                    Files.createDirectories(uploadDir);
+                }
+
+                attachmentPath = uploadDir.resolve(attachment.getOriginalFilename()).toString();
+                attachment.transferTo(Paths.get(attachmentPath));
+            }
+
+            // Call the email service with the file path
+            String result = emailService.sendEmail(
+                fromAddress,
+                toAddress,
+                subject,
+                body,
+                attachmentPath
+            );
+
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error: Failed to send email. " + e.getMessage();
+        }
     }
 
     @Data
