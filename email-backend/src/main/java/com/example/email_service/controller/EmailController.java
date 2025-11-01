@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/emails")
-@CrossOrigin(origins = "*") // allow frontend if needed
+@CrossOrigin(origins = "*") 
 public class EmailController {
 
     private final EmailService emailService;
@@ -24,37 +24,15 @@ public class EmailController {
         this.emailService = emailService;
     }
 
-    // ✅ Health check
     @GetMapping("/health")
     public String healthCheck() {
         return emailService.healthCheck();
     }
 
-    // ✅ Get email history
     @GetMapping
     public List<EmailEntity> getAllEmails() {
         return emailService.getAllEmails();
     }
-
-    // ✅ Send email
-    // @PostMapping
-    // public String sendEmail(@RequestBody EmailRequest email) {
-    //     try{
-    //         String result = emailService.sendEmail(
-    //             email.getFromAddress(),
-    //             email.getToAddress(), 
-    //             email.getSubject(), 
-    //             email.getBody(), 
-    //             email.getAttachmentName()
-                    
-    //         );
-
-    //         return result;
-    //     }catch(Exception e) {
-    //         e.printStackTrace();
-    //         return "Error: Failed to send email. " + e.getMessage();
-    //     }
-    // }
 
     @PostMapping(consumes = "multipart/form-data")
     public String sendEmail(

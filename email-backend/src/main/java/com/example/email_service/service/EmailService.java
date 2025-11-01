@@ -37,35 +37,6 @@ public class EmailService {
     public List<EmailEntity> getAllEmails() {
         return emailRepository.findAll();
     }
-    // Single recipient version
-    // public String sendEmail(String from, String to, String subject, String body, String attachmentName) {
-        
-    //     EmailEntity emailEntity = new EmailEntity();
-    //     emailEntity.setFromAddress(defaultFromAddress);
-    //     emailEntity.setToAddress(to);
-    //     emailEntity.setSubject(subject);
-    //     emailEntity.setBody(body);
-    //     emailEntity.setAttachmentName(attachmentName);
-    //     emailEntity.setStatus("PENDING");
-    //     emailEntity.setSentAt(LocalDateTime.now());
-    //     emailRepository.save(emailEntity);
-    //     try{
-    //         mailSenderAdapter.sendEmail(emailEntity);
-    //         emailEntity.setStatus("SENT");
-    //         emailRepository.save(emailEntity);
-    //         return "Email sent successfully to " + to;
-    //     } catch (MailException e) {
-    //         logger.error("Error sending email to {}: {}", to, e.getMessage());
-    //         emailEntity.setStatus("FAILED");
-    //         emailRepository.save(emailEntity); 
-    //         return "Failed to send email: " + e.getMessage();
-    //     } catch (Exception e){
-    //         logger.error("Unexpected error sending email to {}: {}", to, e.getMessage());
-    //         emailEntity.setStatus("FAILED");
-    //         emailRepository.save(emailEntity);
-    //         return "Unexpected error: " + e.getMessage();
-    //     }
-    // }
 
     public String sendEmail(String from, List<String> to, String subject, String body, String attachmentName) {
         

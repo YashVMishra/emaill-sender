@@ -35,7 +35,6 @@ public class GmailAdapter implements MailSenderAdapter {
         MimeMessageHelper helper = new MimeMessageHelper(message, hasAttachment);
     
         String[] recipients = email.getToAddress().split(",");
-        // helper.setTo(email.getToAddress());
         helper.setTo(recipients);
         helper.setSubject(email.getSubject());
         helper.setText(email.getBody());
